@@ -1,0 +1,40 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0-only"
+issueTrackerURL="https://github.com/ran4om/seed-atlas-xaero-neoforge/issues"
+
+[[mods]]
+modId="seedatlas_xaero"
+version="${version}"
+displayName="Seed Atlas for Xaero's World Map"
+authors="DUzzL (original), ran4om (1.21.1 NeoForge port)"
+displayURL="https://github.com/ran4om/seed-atlas-xaero-neoforge"
+credits="Original mod and Seed Atlas by DUzzL. Engine derived from Cubiomes Viewer and cubiomes by Cubitect."
+logoFile="assets/seedatlas_xaero/icon.png"
+description='''Client-side seed biome and structure layers for Xaero's World Map.
+Unofficial Minecraft 1.21.1 NeoForge port of seed-atlas-xaero.'''
+displayTest="IGNORE_ALL_VERSION"
+
+[[mixins]]
+config="seedatlas_xaero.client.mixins.json"
+
+[[dependencies.seedatlas_xaero]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.0,21.2)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.seedatlas_xaero]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.seedatlas_xaero]]
+modId="xaeroworldmap"
+type="required"
+versionRange="[${xaero_world_map_version},)"
+ordering="AFTER"
+side="CLIENT"

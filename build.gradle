@@ -1,0 +1,137 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.147'
+}
+
+version = "${mod_version}-mc${minecraft_version}-neoforge"
+group = maven_group
+base.archivesName = archives_base_name
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.withSourcesJar()
+
+repositories {
+    maven { url = 'https://chocolateminecraft.com/maven' }
+    mavenCentral()
+}
+
+// Development only: a client driver for screenshots and smoke tests (runHarness); never in the jar.
+sourceSets {
+    devHarness {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    devHarnessImplementation.extendsFrom implementation
+}
+
+neoForge {
+    version = project.neo_version
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+    mods {
+        seedatlas_xaero { sourceSet sourceSets.main }
+        seedatlas_devharness { sourceSet sourceSets.devHarness }
+    }
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('run')
+            loadedMods = [mods.seedatlas_xaero]
+        }
+        harness {
+            client()
+            gameDirectory = project.file('run-harness')
+            sourceSet = sourceSets.devHarness
+            loadedMods = [mods.seedatlas_xaero, mods.seedatlas_devharness]
+            jvmArguments.add('-Xmx2G')
+            programArguments.addAll('--width', '1920', '--height', '1080')
+        }
+    }
+    // JUnit tests that need Minecraft's registries run inside FML.
+    unitTest {
+        enable()
+        testedMod = mods.seedatlas_xaero
+    }
+}
+
+dependencies {
+    // Xaero's World Map is a required external mod and is never bundled.
+    implementation("xaero.map:xaeroworldmap-neoforge-${minecraft_version}:${xaero_world_map_version}") {
+        exclude group: 'net.neoforged'
+    }
+    // runHarness -PharnessMods=<dir> also loads every mod jar in <dir>, for compatibility runs.
+    if (project.hasProperty('harnessMods')) {
+        devHarnessRuntimeOnly fileTree(project.property('harnessMods')) { include '*.jar' }
+    }
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+neoForge.addModdingDependenciesTo(sourceSets.devHarness)
+
+tasks.matching { it.name == 'runHarness' }.configureEach {
+    doFirst { delete 'run-harness/saves/harness' }
+}
+
+test {
+    useJUnitPlatform()
+    maxHeapSize = '1500m'
+    testLogging { showStandardStreams = true; exceptionFormat = 'full' }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '5000']
+}
+
+processResources {
+    def metadataProperties = [version: project.version, xaero_world_map_version: project.xaero_world_map_version]
+    inputs.properties metadataProperties
+    filesMatching('META-INF/neoforge.mods.toml') { expand metadataProperties }
+    exclude 'natives/**/*.lib', 'natives/**/*.pdb'
+}
+
+jar {
+    from('LICENSE')
+    from('THIRD_PARTY_NOTICES.md')
+    from('LEGAL_NOTICE.md')
+    from('native/ENGINE_LICENSE')
+}
+
+// Standalone test programs (as upstream): each compiles against the mod and runs in its own JVM.
+def standaloneTest(String name, String sourceDir, String mainClassName, Map options = [:]) {
+    def classesDir = layout.buildDirectory.dir("classes/${name}")
+    def compile = tasks.register("compile${name.capitalize()}", JavaCompile) {
+        dependsOn tasks.named('classes')
+        source = fileTree(sourceDir) { include '**/*.java' }
+        classpath = sourceSets.main.compileClasspath + sourceSets.main.output
+        destinationDirectory = classesDir
+    }
+    def run = tasks.register(name, JavaExec) {
+        group = 'verification'
+        dependsOn compile
+        classpath = files(classesDir) + sourceSets.main.runtimeClasspath + sourceSets.main.output
+        mainClass = mainClassName
+        jvmArgs(['-ea', '-Xmx1G', '-Djava.awt.headless=true', "-Dseedatlas.projectDir=${projectDir}"] + (options.jvmArgs ?: []))
+        def dir = layout.buildDirectory.dir("tests/${name}").get().asFile
+        workingDir = dir
+        doFirst { dir.mkdirs() }
+    }
+    tasks.named('check') { dependsOn run }
+}
+
+// Completion persistence and world/seed isolation without launching a game.
+standaloneTest('progressPersistenceTest', 'src/testProgress/java', 'org.seedatlas.xaero.config.StructureProgressTest')
+// Visible icon sizes, aspect ratios and transparent rail gaps without a game window.
+standaloneTest('iconLayoutTest', 'src/testIcons/java', 'org.seedatlas.xaero.integration.icon.IconLayoutTest')
+// Biome highlight colours, viewport tiling and End terrain styling.
+standaloneTest('biomeHighlightTest', 'src/testBiome/java', 'org.seedatlas.xaero.biome.BiomeHighlightTest')
+// The client command tree.
+standaloneTest('commandRegistrationTest', 'src/testCommands/java', 'org.seedatlas.xaero.command.CommandRegistrationTest')
+// The runtime Xaero compatibility check (mixin targets, captured locals, linkage) against Xaero 1.21.1.
+standaloneTest('xaeroCompatibilityTest', 'src/testXaero/java', 'org.seedatlas.xaero.integration.XaeroCompatibilityTest')

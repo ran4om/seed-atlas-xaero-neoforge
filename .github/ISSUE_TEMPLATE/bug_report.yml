@@ -1,0 +1,33 @@
+name: Bug report
+description: Something is wrong on the map or the game crashes
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead. Screenshots of the map help.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Seed Atlas, NeoForge and Xaero's World Map versions
+      placeholder: Seed Atlas 2.0.0, NeoForge 21.1.257, Xaero's World Map 1.47.0
+    validations:
+      required: true
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other mods
+      description: Map and rendering mods especially (Xaero's Minimap, XaeroPlus, Sodium, Iris...)
+  - type: input
+    id: seed
+    attributes:
+      label: Seed and position
+      description: For wrong biomes or structures, the seed and the coordinates
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: logs/latest.log, or the crash report, as a file or a link

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seed Atlas for Xaero's World Map (Minecraft 1.21.1, NeoForge)</title>
+  <meta name="description" content="A client-side mod that fills Xaero's World Map with the biomes, terrain and structures your world seed will generate. For Minecraft 1.21.1 on NeoForge.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Seed Atlas for Xaero's World Map">
+  <meta property="og:description" content="See the biomes and structures your seed will generate, right on Xaero's World Map. Minecraft 1.21.1, NeoForge.">
+  <meta property="og:image" content="https://ran4om.github.io/seed-atlas-xaero-neoforge/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="img/overworld.webp" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Seed Atlas home">
+        <img src="favicon.png" width="28" height="28" alt="">
+        <span>Seed Atlas</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#dimensions">Dimensions</a>
+        <a href="#menus">Menus</a>
+        <a href="#install">Install</a>
+        <a href="#commands">Commands</a>
+      </nav>
+      <a class="btn btn-quiet nav-cta" href="https://github.com/ran4om/seed-atlas-xaero-neoforge">GitHub</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Minecraft 1.21.1 on NeoForge</p>
+          <h1>Your seed, mapped before you get there.</h1>
+          <p class="lede">Seed Atlas fills Xaero's World Map with the biomes, terrain and structures your world seed will generate.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://github.com/ran4om/seed-atlas-xaero-neoforge/releases/latest">Download</a>
+            <a class="btn btn-quiet" href="https://github.com/ran4om/seed-atlas-xaero-neoforge">Source code</a>
+          </div>
+        </div>
+        <figure class="hero-shot">
+          <img src="img/overworld.webp" width="1600" height="966" fetchpriority="high"
+               alt="Xaero's World Map zoomed out over an overworld coastline, covered in predicted terrain with village, shipwreck, mineshaft and ruined portal markers.">
+        </figure>
+      </div>
+    </section>
+
+    <section class="seam reveal">
+      <div class="wrap">
+        <h2>Explored and predicted, on one map.</h2>
+        <p class="body">Where you have been, Xaero draws what it saw. Everywhere else, Seed Atlas draws what the seed will generate, in the same style, so the two meet without a seam.</p>
+        <figure class="wide-shot">
+          <img src="img/overworld-close.webp" width="1600" height="966" loading="lazy"
+               alt="Close view of the world map around spawn. Explored forest and river blend into the predicted terrain around them.">
+          <figcaption>Spawn at 3x zoom. The darker forest in the middle was explored; the rest comes from the seed.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="dimensions" id="dimensions">
+      <div class="wrap">
+        <h2 class="reveal">The Nether and the End too.</h2>
+        <div class="bento">
+          <figure class="tile tile-nether reveal">
+            <img src="img/nether.webp" width="1600" height="966" loading="lazy"
+                 alt="Nether map showing crimson forest, warped forest, soul sand valley and basalt delta biomes with bastion and fortress markers.">
+            <figcaption>Nether biomes, with bastions and fortresses.</figcaption>
+          </figure>
+          <figure class="tile tile-end reveal">
+            <img src="img/end.webp" width="1600" height="831" loading="lazy"
+                 alt="End map zoomed out, showing the outer islands with end city and end gateway markers.">
+            <figcaption>Outer End islands, cities and gateways.</figcaption>
+          </figure>
+          <div class="tile tile-list reveal">
+            <h3>Structures it can mark</h3>
+            <ul class="tags" aria-label="Structure types">
+              <li>Villages</li><li>Strongholds</li><li>Ancient cities</li><li>Trial chambers</li>
+              <li>Ocean monuments</li><li>Mansions</li><li>Shipwrecks</li><li>Ruined portals</li>
+              <li>Buried treasure</li><li>Slime chunks</li><li>Amethyst geodes</li><li>Trail ruins</li>
+              <li>Bastions</li><li>Fortresses</li><li>End cities</li><li>End gateways</li>
+            </ul>
+            <p class="small">Plus temples, outposts, ore veins and more. Pick which ones show, tick them off as you find them, and set their size.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="menus" id="menus">
+      <div class="wrap">
+        <h2 class="reveal">Settings live on the map.</h2>
+        <p class="body reveal">The SA button on the world map opens every option over the map itself. Find the nearest structure or biome and Seed Atlas drops a waypoint on it.</p>
+      </div>
+      <div class="rail" tabindex="0" aria-label="Seed Atlas menus, scroll sideways">
+        <figure>
+          <img src="img/menu-settings.webp" width="1600" height="966" loading="lazy" alt="Seed Atlas settings menu over the world map: layer, opacity, structures, performance and nearest finders.">
+          <figcaption>Main settings</figcaption>
+        </figure>
+        <figure>
+          <img src="img/menu-markers.webp" width="1600" height="966" loading="lazy" alt="Structure markers menu listing structure types with on and off toggles and completion counts.">
+          <figcaption>Structure markers</figcaption>
+        </figure>
+        <figure>
+          <img src="img/menu-nearest-structure.webp" width="1600" height="966" loading="lazy" alt="Nearest structure menu with a search box and a Find button for each structure type.">
+          <figcaption>Nearest structure</figcaption>
+        </figure>
+        <figure>
+          <img src="img/menu-biome-highlights.webp" width="1600" height="966" loading="lazy" alt="Biome highlights menu with a biome search and a toggle for each biome.">
+          <figcaption>Biome highlights</figcaption>
+        </figure>
+        <figure>
+          <img src="img/menu-world-generation.webp" width="1600" height="966" loading="lazy" alt="World generation menu listing Minecraft versions from Auto down to 1.17.">
+          <figcaption>Older world versions</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="install" id="install">
+      <div class="wrap install-grid">
+        <div>
+          <h2 class="reveal">Install</h2>
+          <ol class="steps">
+            <li class="reveal">
+              <h3>Add Xaero's World Map</h3>
+              <p>Install NeoForge 21.1 for Minecraft 1.21.1 and Xaero's World Map 1.47.0 or newer.</p>
+            </li>
+            <li class="reveal">
+              <h3>Drop in the jar</h3>
+              <p>Put the Seed Atlas jar in your <code>mods</code> folder. Only players who want the map need it; servers don't.</p>
+            </li>
+            <li class="reveal">
+              <h3>Set the seed on servers</h3>
+              <p>Singleplayer worlds are detected automatically. On a server, run <code>/seedatlas seed &lt;seed&gt;</code> once and it is remembered.</p>
+            </li>
+          </ol>
+        </div>
+        <aside class="needs reveal" aria-label="Requirements">
+          <h3>Requirements</h3>
+          <dl>
+            <dt>Minecraft</dt><dd>1.21.1</dd>
+            <dt>Loader</dt><dd>NeoForge 21.1</dd>
+            <dt>Map</dt><dd>Xaero's World Map 1.47.0+</dd>
+            <dt>Java</dt><dd>21</dd>
+            <dt>Systems</dt><dd>Windows, Linux, macOS (Intel and Apple silicon)</dd>
+          </dl>
+          <p class="small">Works alongside Xaero's Minimap, XaeroPlus, Sodium and ImmediatelyFast.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="commands" id="commands">
+      <div class="wrap">
+        <h2 class="reveal">Commands</h2>
+        <div class="cmd-grid">
+          <div class="cmd reveal"><code>/seedatlas status</code><p>Shows the seed, version, layer and engine state.</p></div>
+          <div class="cmd reveal"><code>/seedatlas seed &lt;seed&gt;</code><p>Sets the seed for this world or server. Text seeds are hashed like vanilla.</p></div>
+          <div class="cmd reveal"><code>/seedatlas dimension-seed &lt;nether|end&gt; &lt;seed&gt;</code><p>Gives one dimension its own seed.</p></div>
+          <div class="cmd reveal"><code>/seedatlas clear [nether|end]</code><p>Forgets the seed.</p></div>
+          <div class="cmd reveal"><code>/seedatlas version [auto|&lt;version&gt;]</code><p>Predicts an older world generation, for worlds made before 1.21.</p></div>
+          <div class="cmd reveal"><code>/seedatlas settings</code><p>Opens the settings menu.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="checked">
+      <div class="wrap">
+        <h2 class="reveal">Checked against Minecraft itself.</h2>
+        <p class="body reveal">Every build compares the bundled engine with 1.21.1's own world generator on four seeds.</p>
+        <div class="stats">
+          <div class="stat reveal"><strong>1500 / 1500</strong><span>Overworld and End biome samples that match, per seed</span></div>
+          <div class="stat reveal"><strong>All strongholds</strong><span>Within 20,000 blocks, at vanilla's exact positions</span></div>
+          <div class="stat reveal"><strong>1497+ / 1500</strong><span>Nether biome samples that match, per seed</span></div>
+        </div>
+        <div class="limits reveal">
+          <h3>What it can't see</h3>
+          <ul>
+            <li>Only vanilla generation. Structures from mods and datapacks are not shown.</li>
+            <li>Markers show where a structure can generate. The game can still fail to place it.</li>
+            <li>Terrain shading is a little coarser than on Minecraft 26.x, and Nether caves are not cut out.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>
+        <p>An unofficial port of <a href="https://github.com/DUzzL/seed-atlas-xaero">seed-atlas-xaero</a> by DUzzL. The engine derives from <a href="https://github.com/Cubitect/cubiomes">cubiomes</a> by Cubitect.</p>
+        <p>GPLv3. Not affiliated with Xaero, Mojang or Microsoft.</p>
+      </div>
+      <nav aria-label="Project links">
+        <a href="https://github.com/ran4om/seed-atlas-xaero-neoforge">GitHub</a>
+        <a href="https://github.com/ran4om/seed-atlas-xaero-neoforge/issues">Report a bug</a>
+        <a href="https://github.com/ran4om/seed-atlas-xaero-neoforge/blob/main/CHANGELOG.md">Changelog</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

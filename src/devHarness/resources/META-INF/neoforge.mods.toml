@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0-only"
+
+[[mods]]
+modId="seedatlas_devharness"
+version="0"
+displayName="Seed Atlas dev harness"
+description='''Development only: drives a client through world creation and Xaero's map for screenshots.'''
+
+[[dependencies.seedatlas_devharness]]
+modId="seedatlas_xaero"
+type="required"
+versionRange="*"
+ordering="AFTER"
+side="CLIENT"
