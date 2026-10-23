@@ -63,6 +63,18 @@ public final class StructureProgressTest {
                 """);
             check(SeedAtlasConfigIO.load(legacyHide).completedOpacity() == 0, "Hidden completed structures stay hidden");
             Files.delete(legacyHide);
+            // Version 8 started with structures off and the menu that turns them on could crash.
+            Path structuresOff = directory.resolve("structures-off.json");
+            Files.writeString(structuresOff, """
+                {"version":8,"structures":{"enabled":false}}
+                """);
+            check(SeedAtlasConfigIO.load(structuresOff).structuresEnabled(), "Version 8 turns structures on once");
+            Files.writeString(structuresOff, """
+                {"version":9,"structures":{"enabled":false}}
+                """);
+            check(!SeedAtlasConfigIO.load(structuresOff).structuresEnabled(), "Structures switched off stay off");
+            Files.delete(structuresOff);
+            check(new SeedAtlasConfig().structuresEnabled(), "Structures start on");
             gameVersions(file, loaded);
             nearbyAndReset(file);
             loaded.setBiomeHighlightEnabled(true);

@@ -36,7 +36,9 @@ abstract class SeedAtlasScreen extends Screen implements IScreenBase {
 
 	@Override
 	public void removed() {
-		this.minecraft.getWindow().setFramerateLimit(this.minecraft.options.framerateLimit().get());
+		// Also runs when the screen is replaced before init(), with this.minecraft still null.
+		Minecraft minecraft = Minecraft.getInstance();
+		minecraft.getWindow().setFramerateLimit(minecraft.options.framerateLimit().get());
 		super.removed();
 	}
 

@@ -1,10 +1,16 @@
 package org.seedatlas.xaero.devharness;
 
+import com.mojang.blaze3d.platform.Window;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
 import net.minecraft.client.Screenshot;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.AccessibilityOnboardingScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -24,7 +30,9 @@ import org.seedatlas.xaero.gui.BiomeHighlightScreen;
 import org.seedatlas.xaero.gui.MarkerSettingsScreen;
 import org.seedatlas.xaero.gui.NearestScreen;
 import org.seedatlas.xaero.gui.PerformanceSettingsScreen;
+import org.seedatlas.xaero.gui.SeedAtlasSettingsScreen;
 import org.seedatlas.xaero.gui.WorldGenerationScreen;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xaero.map.WorldMapSession;
@@ -81,9 +89,16 @@ public final class DevHarness {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> tick());
     }
 
-    /** Opens every Seed Atlas menu over the map, as the SA button does, and screenshots each. */
+    /** Clicks the SA button on the map, then opens every Seed Atlas menu over the map and screenshots each. */
     private void addMenus() {
-        steps.add(new Step("open settings", 5, () -> SeedAtlasClientState.openSettings(Minecraft.getInstance().screen)));
+        steps.add(new Step("click SA button", 5, DevHarness::clickSettingsButton));
+        steps.add(new Step("check settings opened", 5, () -> {
+            Screen screen = Minecraft.getInstance().screen;
+            if (!(screen instanceof SeedAtlasSettingsScreen)) {
+                LOGGER.error("[HARNESS] the SA button opened {} instead of the settings", screen);
+                SeedAtlasClientState.openSettings(screen);
+            }
+        }));
         steps.add(new Step("screenshot menu settings", 40, () -> screenshot("menu-settings")));
         List<Function<Screen, Screen>> menus = List.of(WorldGenerationScreen::new, MarkerSettingsScreen::new,
             PerformanceSettingsScreen::new, BiomeHighlightScreen::new, parent -> new NearestScreen(parent, false),
@@ -155,6 +170,39 @@ public final class DevHarness {
         double x = minecraft.screen.width / 2.0;
         double y = minecraft.screen.height / 2.0;
         for (int i = 0; i < Math.abs(clicks); ++i) minecraft.screen.mouseScrolled(x, y, 0, Math.signum(clicks));
+    }
+
+    /**
+     * Presses and releases the mouse on the map's SA button through Minecraft's own mouse handler,
+     * so every mod listening to screen mouse events sees the click, as in a real game.
+     */
+    private static void clickSettingsButton() {
+        Minecraft minecraft = Minecraft.getInstance();
+        Screen map = minecraft.screen;
+        // The layer toggle at the bottom is labelled SA as well; the settings button is at the top.
+        AbstractWidget button = map.children().stream()
+            .filter(child -> child instanceof AbstractWidget widget && widget.getMessage().getString().equals("SA")
+                && widget.getY() == 0)
+            .map(AbstractWidget.class::cast).findFirst()
+            .orElseThrow(() -> new IllegalStateException("No SA button on " + map));
+        Window window = minecraft.getWindow();
+        double scale = (double) window.getScreenWidth() / window.getGuiScaledWidth();
+        try {
+            Field x = MouseHandler.class.getDeclaredField("xpos");
+            Field y = MouseHandler.class.getDeclaredField("ypos");
+            Method press = MouseHandler.class.getDeclaredMethod("onPress", long.class, int.class, int.class, int.class);
+            x.setAccessible(true);
+            y.setAccessible(true);
+            press.setAccessible(true);
+            x.setDouble(minecraft.mouseHandler, (button.getX() + button.getWidth() / 2.0) * scale);
+            y.setDouble(minecraft.mouseHandler, (button.getY() + button.getHeight() / 2.0) * scale);
+            press.invoke(minecraft.mouseHandler, window.getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT, GLFW.GLFW_PRESS, 0);
+            press.invoke(minecraft.mouseHandler, window.getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT, GLFW.GLFW_RELEASE, 0);
+        } catch (InvocationTargetException exception) {
+            throw new IllegalStateException("Clicking the SA button failed", exception.getCause());
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException(exception);
+        }
     }
 
     private static void screenshot(String name) {

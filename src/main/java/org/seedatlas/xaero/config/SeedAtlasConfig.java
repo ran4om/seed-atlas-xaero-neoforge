@@ -16,7 +16,7 @@ import org.seedatlas.xaero.nativeapi.Dimension;
 
 /** Mutable, synchronized representation of the client configuration. */
 public final class SeedAtlasConfig {
-	public static final int CURRENT_VERSION = 8;
+	public static final int CURRENT_VERSION = 9;
 	public static final int DEFAULT_OPACITY = 255;
 	/** Completed structure markers in percent: 0 hides them, 100 draws them like every other marker. */
 	public static final int DEFAULT_COMPLETED_OPACITY = 100;
@@ -42,7 +42,7 @@ public final class SeedAtlasConfig {
 
 	private boolean layerEnabled = true;
 	private int opacity = DEFAULT_OPACITY;
-	private boolean structuresEnabled;
+	private boolean structuresEnabled = true;
 	private int completedOpacity = DEFAULT_COMPLETED_OPACITY;
 	private final Set<StructureKey> completedStructures = new LinkedHashSet<>();
 	private final Map<StructureGroup, List<StructureKey>> completedByGroup = new HashMap<>();

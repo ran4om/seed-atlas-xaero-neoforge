@@ -47,7 +47,9 @@ final class SeedAtlasConfigIO {
 			config.setOpacity(loadedVersion <= 2 && loadedOpacity == 191 ? SeedAtlasConfig.DEFAULT_OPACITY : loadedOpacity);
 
 			JsonObject structures = object(root, "structures");
-			config.setStructuresEnabled(bool(structures, "enabled", config.structuresEnabled()));
+			// Up to version 8 structures started off, and in 2.0.0 of the 1.21.1 port the settings
+			// menu crashed before they could be switched on, so turn them on once.
+			config.setStructuresEnabled(loadedVersion <= 8 || bool(structures, "enabled", config.structuresEnabled()));
 			// Version 7 and older only had a switch that hid completed structures.
 			config.setCompletedOpacity(integer(structures, "completedOpacity",
 				bool(structures, "hideCompleted", false) ? 0 : SeedAtlasConfig.DEFAULT_COMPLETED_OPACITY));

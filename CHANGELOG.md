@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.2
+
+- Tested with Sinytra Connector and Fabric API installed. Closing a Seed Atlas menu that never
+  finished opening no longer crashes the game.
+- Structure markers are now on by default. Existing settings files from earlier versions turn
+  them on once; after that, switching them off is remembered.
+- On a server, Seed Atlas now tells you in chat when it has no seed yet, and how to set one with
+  `/seedatlas seed <seed>`. Servers never send their seed, so until then the seed map stays empty.
+
 ## 2.0.1 (1.21.1 NeoForge port)
 
 First release of the Minecraft 1.21.1 NeoForge port of

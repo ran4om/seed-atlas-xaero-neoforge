@@ -16,7 +16,8 @@ It is a client-side mod. Servers do not need it, and players without it can stil
 - Xaero's World Map 1.47.0 or newer (it brings its XaeroLib dependency)
 - Windows x86-64, Linux x86-64, or macOS (Intel or Apple silicon)
 
-Xaero's Minimap, XaeroPlus, Sodium and ImmediatelyFast work alongside it.
+Xaero's Minimap, XaeroPlus, Sodium, ImmediatelyFast, and Sinytra Connector with Fabric API work
+alongside it.
 
 Website: https://ran4om.github.io/seed-atlas-xaero-neoforge/
 
@@ -29,7 +30,7 @@ push to `main` also builds one, attached to its run on the
 ## Install
 
 1. Install NeoForge 21.1 for Minecraft 1.21.1 and Xaero's World Map 1.47.0 or newer.
-2. Put `seedatlas-xaero-2.0.1-mc1.21.1-neoforge.jar` in the `mods` folder.
+2. Put `seedatlas-xaero-2.0.2-mc1.21.1-neoforge.jar` in the `mods` folder.
 
 Only the players who want the seed map need it. Do not install it on a server.
 
@@ -79,13 +80,15 @@ Client commands:
 
 `./gradlew runHarness` starts a real client with a development-only harness mod (`src/devHarness`,
 never in the jar). It creates a seeded world, runs the commands, opens the map in all three
-dimensions, saves screenshots to `run-harness/screenshots` and quits.
-`-PharnessMods=<dir>` loads extra mod jars as well, for compatibility runs.
+dimensions, clicks the map's SA button, opens every menu, saves screenshots to
+`run-harness/screenshots` and quits. `-PharnessMods=<dir>` loads extra mod jars as well, for
+compatibility runs. Mods that hook into loading, such as Sinytra Connector, go in
+`run-harness/mods` instead.
 
 ## Releasing
 
 Set `mod_version` in `gradle.properties`, add a section for it to [CHANGELOG.md](CHANGELOG.md),
-then push a matching tag (`git tag v2.0.1 && git push origin v2.0.1`). The Release workflow builds
+then push a matching tag (`git tag v2.0.2 && git push origin v2.0.2`). The Release workflow builds
 and tests the jar and publishes a GitHub release with the changelog section as its notes.
 
 ## Website

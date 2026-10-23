@@ -13,6 +13,8 @@ public final class SeedAtlasXaero {
     public static final String MOD_ID = "seedatlas_xaero";
 
     private static boolean incompatibilityShown;
+    /** The server last told it has no seed, so each server is told once per session. */
+    private static String seedHintContext;
 
     private SeedAtlasXaero() { }
 
@@ -31,9 +33,22 @@ public final class SeedAtlasXaero {
         SeedAtlasClientState.refreshContext(client);
         if (xaeroCompatible()) {
             SeedAtlasXaeroIntegration.tickBackground(client);
+            hintMissingSeed(client);
         } else if (!incompatibilityShown && client.player != null) {
             incompatibilityShown = true;
             client.player.sendSystemMessage(incompatibleMessage());
+        }
+    }
+
+    /** A server never sends its seed, so without this the map just stays empty. */
+    private static void hintMissingSeed(Minecraft client) {
+        if (client.player == null || client.hasSingleplayerServer() || SeedAtlasClientState.hasActiveSeed()) {
+            return;
+        }
+        String context = SeedAtlasClientState.currentContextKey();
+        if (!context.isEmpty() && !context.equals(seedHintContext)) {
+            seedHintContext = context;
+            client.player.sendSystemMessage(Component.translatable("message.seedatlas_xaero.server_needs_seed"));
         }
     }
 
